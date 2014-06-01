@@ -6,39 +6,33 @@
 
 void radixSort(int* const data, const int size)
 {
+    int digit = 2;  // 1bit
+
     // backetとbacketのカウントを用意
-    int backet[256][256];
-    int backetCnt[256];
-    for (int i = 0; i < 256; ++i) {
+    int backet[digit][size];
+    int backetCnt[digit];
+    for (int i = 0; i < digit; ++i) {
         backetCnt[i] = 0;
     }
 
-    for (int d = 0, logR = 0; d < 4; ++d, logR += 8) {
+    for (int d = 0, logR = 0; d < 32; ++d, logR += 1) {
         // backetに値を入れる
         for (int i = 0; i < size; ++i) {
-            int key = (data[i] >> logR) & 255;  // 256進のd桁目だけを取り出す
+            int key = (data[i] >> logR) & 0x01;
             backet[key][backetCnt[key]] = data[i];
             ++backetCnt[key];
         }
 
         // backetを結合
         int index = 0;
-        for (int j = 0; j < 256; ++j) {
-            for (int k = 0; backetCnt[j]; ++k) {
+        for (int j = 0; j < digit; ++j) {
+            for (int k = 0; k < backetCnt[j]; ++k) {
                 data[index++] = backet[j][k];
+                backet[j][k] = 0;   // backetをからにする
             }
+            backetCnt[j] = 0;
         }
-
-        // backetを空にする
-        for (int i = 0; i < 256; ++i) {
-            for (int j = 0; j < INT_MAX; ++j) {
-                backet[i][j] = 0;
-            }
-            backetCnt[i] = 0;
-        }
-
     }
-
 
     return;
 }
