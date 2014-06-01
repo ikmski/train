@@ -6,12 +6,12 @@
 
 void radixSort(int* const data, const int size)
 {
-    int digit = 2;  // 1bit
+    int radix = 2;  // 1bit
 
     // backetとbacketのカウントを用意
-    int backet[digit][size];
-    int backetCnt[digit];
-    for (int i = 0; i < digit; ++i) {
+    int backet[radix][size];
+    int backetCnt[radix];
+    for (int i = 0; i < radix; ++i) {
         backetCnt[i] = 0;
     }
 
@@ -25,7 +25,7 @@ void radixSort(int* const data, const int size)
 
         // backetを結合
         int index = 0;
-        for (int j = 0; j < digit; ++j) {
+        for (int j = 0; j < radix; ++j) {
             for (int k = 0; k < backetCnt[j]; ++k) {
                 data[index++] = backet[j][k];
                 backet[j][k] = 0;   // backetをからにする
