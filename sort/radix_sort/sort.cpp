@@ -74,6 +74,7 @@ int main(int argc, char* argv[])
     radixSort(data, maxSize);
 
     procTime->end();
+    delete procTime;
 
     fp = fopen("./output.csv", "w");
     if (!fp) {

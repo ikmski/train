@@ -55,6 +55,7 @@ int main(int argc, char* argv[])
     bubbleSort(data, maxSize);
 
     procTime->end();
+    delete procTime;
 
     fp = fopen("./output.csv", "w");
     if (!fp) {

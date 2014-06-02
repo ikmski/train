@@ -88,6 +88,7 @@ int main(int argc, char* argv[])
     margeSort(data, maxSize);
 
     procTime->end();
+    delete procTime;
 
     fp = fopen("./output.csv", "w");
     if (!fp) {

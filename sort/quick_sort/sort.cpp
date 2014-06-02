@@ -86,6 +86,7 @@ int main(int argc, char* argv[])
     quickSort(data, maxSize);
 
     procTime->end();
+    delete procTime;
 
     fp = fopen("./output.csv", "w");
     if (!fp) {
