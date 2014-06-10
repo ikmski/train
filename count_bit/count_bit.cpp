@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
@@ -6,17 +5,32 @@
 timeval start_time;     //!< 開始時刻
 timeval end_time;       //!< 終了時刻
 
-
 int count(const unsigned long data)
 {
+    int result = 0;
+    for (int i = 0; i < 64; ++i) {
+        result += (data >> i) & 0x01;
+    }
 
-    return 0;
+    return result;
 }
 
 int max(const unsigned long data)
 {
+    int result = 0;
+    unsigned long base = 0x7fffffffffffffff;
 
-    return 0;
+    for (int i = 0; i < 63; ++i) {
+
+        long a = data - base;
+        if (a >= 0) {
+            result = count(a) + count(base);
+            break;
+        }
+        base = base >> 1;
+    }
+
+    return result;
 }
 
 void procStart()
@@ -61,7 +75,6 @@ int main(int argc, char* argv[])
         fscanf(fp, "%ld", &buf);
         data[index] = buf;
         buf = 0;
-        //printf("data[%d] = %ld\n", index, data[index]);
     }
 
     fclose(fp);
@@ -73,7 +86,6 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-
     for (int i = 0; i < num; ++i) {
 
         procStart();
@@ -82,14 +94,11 @@ int main(int argc, char* argv[])
 
         double procTime = procEnd();
 
-        fprintf(fp, "Case #%03d: %d %.3f[msec]\n", i+1, result, procTime);
+        fprintf(fp, "Case #%03d: %6d %.3f[msec]\n", i+1, result, procTime);
     }
 
     fclose(fp);
-
     delete[] data;
 
     return 0;
 }
-
-
