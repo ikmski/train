@@ -1,4 +1,6 @@
 sort/*/*.out
 sort/*/output.csv
 
+count_bit/*.out
+count_bit/output
 
