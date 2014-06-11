@@ -2,9 +2,6 @@
 #include <sys/time.h>
 #include <time.h>
 
-timeval start_time;     //!< 開始時刻
-timeval end_time;       //!< 終了時刻
-
 int count(const unsigned long data)
 {
     int result = 0;
@@ -18,33 +15,19 @@ int count(const unsigned long data)
 int max(const unsigned long data)
 {
     int result = 0;
-    unsigned long base = 0x7fffffffffffffff;
+    unsigned long a = 0x7fffffffffffffff;
 
     for (int i = 0; i < 63; ++i) {
 
-        long a = data - base;
-        if (a >= 0) {
-            result = count(a) + count(base);
+        long b = data - a;
+        if (b >= 0) {
+            result = count(a) + count(b);
             break;
         }
-        base = base >> 1;
+        a = a >> 1;
     }
 
     return result;
-}
-
-void procStart()
-{
-     gettimeofday(&start_time, NULL);
-}
-
-double procEnd()
-{
-    gettimeofday(&end_time, NULL);
-    double time_diff = static_cast<double>(end_time.tv_sec  - start_time.tv_sec);
-    double usec_diff = static_cast<double>(end_time.tv_usec - start_time.tv_usec);
-    time_diff += (usec_diff/1000000.0);
-    return time_diff * 1000.0;
 }
 
 int main(int argc, char* argv[])
@@ -72,12 +55,12 @@ int main(int argc, char* argv[])
     unsigned long  buf = 0;
 
     for (int index = 0; index < num; ++index) {
-        fscanf(fp, "%ld", &buf);
+        fscanf(fp, "%lu", &buf);
         data[index] = buf;
         buf = 0;
     }
 
-    fclose(fp);
+    fclose(fp); // 入力ファイル
 
     // 出力ファイル
     fp = fopen("./output", "w");
@@ -88,17 +71,26 @@ int main(int argc, char* argv[])
 
     for (int i = 0; i < num; ++i) {
 
-        procStart();
+        timeval startTime;     //!< 開始時刻
+        timeval endTime;       //!< 終了時刻
+
+        // 時間計測開始
+        gettimeofday(&startTime, NULL);
 
         int result =  max(data[i]);
 
-        double procTime = procEnd();
+        // 時間計測終了
+        gettimeofday(&endTime, NULL);
+        double timeDiff = static_cast<double>(endTime.tv_sec  - startTime.tv_sec);
+        double usecDiff = static_cast<double>(endTime.tv_usec - startTime.tv_usec);
+        timeDiff += (usecDiff/1000000.0);
 
-        fprintf(fp, "Case #%03d: %6d %.3f[msec]\n", i+1, result, procTime);
+        fprintf(fp, "Case #%03d: %4d  %.3f[msec]\n", i+1, result, timeDiff*1000.0);
     }
 
-    fclose(fp);
+    fclose(fp); // 出力ファイル
     delete[] data;
 
     return 0;
 }
+
