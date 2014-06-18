@@ -1,15 +1,31 @@
 #include <stdio.h>
+#include <limits.h>
 #include <sys/time.h>
 #include <time.h>
 
-int getMaxmum(
-              const int numRed,
-              const int numBlue,
-              const int onlyRed,
-              const int onlyBlue,
-              const int bothColors)
+int getMaxmum(int numRed, int numBlue, int onlyRed, int onlyBlue, int bothColors)
 {
-    int result = 0;
+    int result = INT_MIN;
+
+    // それぞれの箱に同色の玉が入っている場合
+    result = numRed * onlyRed + numBlue * onlyBlue;
+
+    // 異なる色の玉が入っている場合
+    int score = result;
+    if (numRed > numBlue) {
+        score = (numRed - numBlue) * onlyRed + 2 * numBlue * bothColors;
+    }
+    else if (numBlue > numRed) {
+        score = (numBlue - numRed) * onlyBlue + 2 * numRed * bothColors;
+    }
+    else {
+        score = (numRed + numBlue) * bothColors;
+    }
+
+    if (score > result) {
+        result = score;
+    }
+
     return result;
 }
 
