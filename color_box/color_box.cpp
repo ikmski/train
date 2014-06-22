@@ -7,23 +7,20 @@ int getMaxmum(int numRed, int numBlue, int onlyRed, int onlyBlue, int bothColors
 {
     int result = INT_MIN;
 
-    // それぞれの箱に同色の玉が入っている場合
-    result = numRed * onlyRed + numBlue * onlyBlue;
-
-    // 異なる色の玉が入っている場合
-    int score = result;
+    // 少ないほうの数だけボールを入れ替える
+    int changeNum = numRed;
     if (numRed > numBlue) {
-        score = (numRed - numBlue) * onlyRed + 2 * numBlue * bothColors;
-    }
-    else if (numBlue > numRed) {
-        score = (numBlue - numRed) * onlyBlue + 2 * numRed * bothColors;
-    }
-    else {
-        score = (numRed + numBlue) * bothColors;
+        changeNum = numBlue;
     }
 
-    if (score > result) {
-        result = score;
+    for (int i = 0; i <= changeNum; ++i) {
+        int score = (numRed  - i) * onlyRed
+                  + (numBlue - i) * onlyBlue
+                  + 2 * i * bothColors;
+
+        if (score > result) {
+            result = score;
+        }
     }
 
     return result;
@@ -81,7 +78,7 @@ int main(int argc, char* argv[])
         double usecDiff = static_cast<double>(endTime.tv_usec - startTime.tv_usec);
         timeDiff += (usecDiff/1000000.0);
 
-        fprintf(outfp, "Case #%03d: %4d  %.3f[msec]\n", index+1, result, timeDiff*1000.0);
+        fprintf(outfp, "Case #%03d: %9d  %.3f[msec]\n", index+1, result, timeDiff*1000.0);
     }
 
     fclose(infp); // 入力ファイル
