@@ -3,30 +3,40 @@
 #include <sys/time.h>
 #include <time.h>
 
+const int DECIMAL_BITS = 16;
+
 int mySqrt(int x)
 {
-    // 入力値の2進数桁数を調べる
-    int i = 0;
-    int t = x;
-    while (t >>= 1) {
-        ++i;
-    }
-
     int a = 0;
     int c = 0;
     int y = 0;
-    for (i += i & 1; i >= 0; i -= 2) {
+    for (int i = 30; i >= 0; i -= 2) {
         c = (y << 1 | 1) <= x >> i;
         a = a << 1 | c;
         y = y << 1 | c;
         x -= c * y << i;
         y += c;
-//printf("i = %d, a = %o, c = %o, y = %o\n", i, a, c, y);
     }
 
-    return a;
+    return a << (DECIMAL_BITS/2);
 }
 
+int intToFixd(int x)
+{
+    return x << DECIMAL_BITS;
+}
+
+double fixedToDouble(int x)
+{
+    double result = static_cast<double>(x >> DECIMAL_BITS);
+    double y = 0.5;
+    for (int i = DECIMAL_BITS-1; i >= 0; --i) {
+        result += ((x >> i) & 0x1) * y;
+        y *= 0.5;
+    }
+
+    return result;
+}
 
 int main(int argc, char* argv[])
 {
@@ -35,24 +45,22 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    int inputValue = atoi(argv[1]);
+    int input = atoi(argv[1]);
 
     timeval startTime;     // 開始時刻
     timeval endTime;       // 終了時刻
 
+    gettimeofday(&startTime, NULL); // 時間計測開始
 
-    // 時間計測開始
-    gettimeofday(&startTime, NULL);
+    int result = mySqrt(intToFixd(input));
 
-    int outputValue = mySqrt(inputValue);
-
-    // 時間計測終了
-    gettimeofday(&endTime, NULL);
+    gettimeofday(&endTime, NULL);   // 時間計測終了
     double timeDiff = static_cast<double>(endTime.tv_sec  - startTime.tv_sec);
     double usecDiff = static_cast<double>(endTime.tv_usec - startTime.tv_usec);
     timeDiff += (usecDiff/1000000.0);
 
-    printf("sqrt(%d) = %d : %.3f[msec]\n", inputValue, outputValue, timeDiff*1000.0);
+    double output = fixedToDouble(result);
+    printf("sqrt(%d) = %f : %.3f[msec]\n", input, output, timeDiff*1000.0);
 
     return 0;
 }
