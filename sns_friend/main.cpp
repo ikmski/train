@@ -14,20 +14,18 @@ int countFriends(int** const data, const int num)
         for (int j = 0; j < num; ++j) {
             isChecked[j] = 0;
         }
+        isChecked[i] = 1;
 
         for (int j = 0; j < num; ++j) {
-            if (i == j) continue;
             if (1 == data[i][j] && 0 == isChecked[j]) {
                 ++count;
                 isChecked[j] = 1;
 
                 int iTmp = j;
                 for (int jTmp = 0; jTmp < num; ++jTmp) {
-                    if (i == jTmp) continue;
                     if (1 == data[iTmp][jTmp] && 0 == isChecked[jTmp]) {
                         ++count;
                         isChecked[jTmp] = 1;
-
                     }
                 }
 
@@ -107,6 +105,7 @@ printf("\n");
     gettimeofday(&startTime, NULL);
 
     int result =  countFriends(data, num);
+printf("result = %d\n", result);
 
     // 時間計測終了
     gettimeofday(&endTime, NULL);
