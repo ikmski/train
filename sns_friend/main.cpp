@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
+#include <string>
 
 int countFriends(int** const data, const int num)
 {
@@ -60,13 +61,6 @@ int main(int argc, char* argv[])
         return -1;
     }
 
-    // 出力ファイル
-    outfp = fopen("./output", "w");
-    if (!outfp) {
-        printf("file not open.");
-        return -1;
-    }
-
     // ファイルの行数を調べる
     int num = 0;
     char buf[BUFSIZ];
@@ -97,6 +91,7 @@ printf("%d ", data[i][j]);
         }
 printf("\n");
     }
+    fclose(infp); // 入力ファイル
 
     timeval startTime;     // 開始時刻
     timeval endTime;       // 終了時刻
@@ -113,7 +108,20 @@ printf("result = %d\n", result);
     double usecDiff = static_cast<double>(endTime.tv_usec - startTime.tv_usec);
     timeDiff += (usecDiff/1000000.0);
 
-    fprintf(outfp, "Case #%03d: %9d  %.3f[msec]\n", 1, result, timeDiff*1000.0);
+    // 出力ファイル
+    std::string inputPath(inputFileName);
+    int l = inputPath.length();
+    std::string outputFileName(inputPath.substr(l-7));
+    std::string indexStr(inputPath.substr(l-2));
+
+    outfp = fopen(outputFileName.c_str(), "w");
+    if (!outfp) {
+        printf("file not open.");
+        return -1;
+    }
+
+    fprintf(outfp, "Case #%s: %4d  %.3f[msec]\n", indexStr.c_str(), result, timeDiff*1000.0);
+    fclose(outfp); // 出力ファイル
 
     // 解放
     for (int i = 0; i < num; ++i) {
@@ -121,8 +129,6 @@ printf("result = %d\n", result);
     }
     delete[] data;
 
-    fclose(infp); // 入力ファイル
-    fclose(outfp); // 出力ファイル
 
     return 0;
 }
