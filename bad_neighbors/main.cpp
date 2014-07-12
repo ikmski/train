@@ -7,15 +7,40 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 int maxDonations(std::vector<int> donations)
 {
+    int result = 0;
     int size = donations.size();
-    for (int i = 0; i < size; ++i) {
-//std::cout << donations[i] << std::endl;
-    }
+    int* buf = new int[size];
 
-    return 0;
+    // 配列の先頭から始める
+    int max = 0;
+    for (int i = 0; i < size-1; ++i) {
+        if      (0 == i) buf[i] = donations[i];
+        else if (1 == i) buf[i] = donations[i];
+        else if (2 == i) buf[i] = donations[i] + buf[i-2];
+        else             buf[i] = donations[i] + std::max(buf[i-2], buf[i-3]);
+        max = buf[i];
+        //std::cout << donations[i] << ", " << buf[i] << std::endl;
+    }
+    result = max;
+
+    // 配列の2番目から始める
+    max = 0;
+    for (int i = 1; i < size; ++i) {
+        buf[0] = 0;
+        if      (1 == i) buf[i] = donations[i];
+        else if (2 == i) buf[i] = donations[i] + buf[i-2];
+        else             buf[i] = donations[i] + std::max(buf[i-2], buf[i-3]);
+        max = buf[i];
+        //std::cout << donations[i] << ", " << buf[i] << std::endl;
+    }
+    result = std::max(result, max);
+
+    delete[] buf;
+    return result;
 }
 
 int main(int argc, char* argv[])
@@ -73,4 +98,3 @@ int main(int argc, char* argv[])
 
     return 0;
 }
-
