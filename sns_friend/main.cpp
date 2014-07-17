@@ -18,9 +18,11 @@ int countFriends(int** const data, const int num)
         isChecked[i] = 1;
 
         for (int j = 0; j < num; ++j) {
-            if (1 == data[i][j] && 0 == isChecked[j]) {
-                ++count;
-                isChecked[j] = 1;
+            if (1 == data[i][j]) {
+                if (0 == isChecked[j]) {
+                    ++count;
+                    isChecked[j] = 1;
+                }
 
                 int iTmp = j;
                 for (int jTmp = 0; jTmp < num; ++jTmp) {
