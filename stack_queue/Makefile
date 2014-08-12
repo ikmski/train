@@ -33,14 +33,15 @@ LIBS	+= -lrt
 
 ##################################################################
 #Target File
-TARGET	= testStack
+TARGET	= test
 
 #Archive File
-ARFILE	= stack.a
+ARFILE	= test.a
 
 #Object Files
-OBJS	+= testStack.o
+OBJS	+= test.o
 OBJS	+= stack.o
+OBJS	+= queue.o
 
 ##################################################################
 #Make Rule

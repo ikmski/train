@@ -1,10 +1,12 @@
 #include <stdio.h>
 
 #include "stack.hpp"
+#include "queue.hpp"
 
 int main(int argc, char* argv[])
 {
     Stack<int> stack;
+    Queue<int> queue;
 
     stack.push(1);
     stack.push(2);
@@ -18,6 +20,19 @@ int main(int argc, char* argv[])
     printf("%d\n", stack.pop());
     printf("%d\n", stack.pop());
 
+    printf("\n");
+
+    queue.enqueue(10);
+    queue.enqueue(20);
+    queue.enqueue(30);
+    queue.enqueue(40);
+    queue.enqueue(50);
+
+    printf("%d\n", queue.dequeue());
+    printf("%d\n", queue.dequeue());
+    printf("%d\n", queue.dequeue());
+    printf("%d\n", queue.dequeue());
+    printf("%d\n", queue.dequeue());
 
     return 0;
 }
