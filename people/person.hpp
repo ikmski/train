@@ -5,32 +5,35 @@
 
 #include "label.hpp"
 
-class Person
+namespace People
 {
-private:
+    class Person
+    {
+    private:
 
-    Label _name;
-    Label _mail;
+        Label* _name;
+        Label* _mail;
 
-public:
+    public:
 
-    Person(
-        const std::string name,
-        const std::string mail);
+        Person(
+            const std::string name,
+            const std::string mail="");
 
-    ~Person();
+        ~Person();
 
-    void display();
+        void display();
 
-    void toString();
+        std::string toString();
 
-private:
+    private:
 
-    Person();
-    Person(const Person&);
-    Person& operator = (const Person&);
+        Person();
+        Person(const Person&);
+        Person& operator = (const Person&);
 
-};
+    };
+}
 
 #endif
 

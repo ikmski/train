@@ -3,25 +3,25 @@
 
 #include "label.hpp"
 
-Label::Label()
+People::Label::Label()
 {
 }
 
-Label::Label(const std::string label)
+People::Label::Label(const std::string label)
 :_label(label)
 {
 }
 
-Label::~Label()
+People::Label::~Label()
 {
 }
 
-void Label::display()
+void People::Label::display()
 {
     std::cout << "display; " << _label;
 }
 
-std::string Label::toString()
+std::string People::Label::toString()
 {
     return "\"" + _label + "\"";
 }

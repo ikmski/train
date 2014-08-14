@@ -1,28 +1,32 @@
+#include <iostream>
 
 #include "person.hpp"
 
-Person::Person
+People::Person::Person
 (
     const std::string name,
-    const std::string mail="")
+    const std::string mail)
 {
-    Label _name(name);
-    Label _mail(mail);
+    _name = new Label(name);
+    _mail = new Label(mail);
 }
 
-Person::~Person()
+People::Person::~Person()
 {
+    delete _name;
+    delete _mail;
 }
 
-void Person::display()
+void People::Person::display()
 {
-    _name.display();
-    _mail.display();
+    _name->display();
+    std::cout << " ";
+    _mail->display();
+    std::cout << std::endl;
 }
 
-void Person::toString()
+std::string People::Person::toString()
 {
-    _name.toString();
-    _mail.toString();
+    return _name->toString() + ", " + _mail->toString();
 }
 

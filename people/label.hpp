@@ -3,29 +3,32 @@
 
 #include <string>
 
-class Label
+namespace People
 {
-private:
+    class Label
+    {
+    private:
 
-    std::string _label;
+        std::string _label;
 
-public:
+    public:
 
-    Label();
-    Label(const std::string label);
+        Label();
+        Label(const std::string label);
 
-    ~Label();
+        ~Label();
 
-    void display();
+        void display();
 
-    std::string toString();
+        std::string toString();
 
-private:
+    private:
 
-    Label(const Label&);
-    Label& operator = (const Label&);
+        Label(const Label&);
+        Label& operator = (const Label&);
 
-};
+    };
+}
 
 #endif
 

@@ -38,6 +38,7 @@ TARGET	= people
 ARFILE	= people.a
 
 #Object Files
+OBJS	+= main.o
 OBJS	+= person.o
 OBJS	+= label.o
 
