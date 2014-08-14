@@ -43,6 +43,11 @@ public:
         return stack[idx];
     }
 
+    bool isEmpty()
+    {
+        return (0 == idx);
+    }
+
 private:
 
     Stack(const Stack&);

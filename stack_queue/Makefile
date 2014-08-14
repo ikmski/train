@@ -42,6 +42,7 @@ ARFILE	= test.a
 OBJS	+= test.o
 OBJS	+= stack.o
 OBJS	+= queue.o
+OBJS	+= my_queue.o
 
 ##################################################################
 #Make Rule
