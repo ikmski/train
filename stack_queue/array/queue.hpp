@@ -48,6 +48,7 @@ public:
 
         T data = queue[head];
         ++head;
+        if (QUEUE_SIZE == head) head = 0;
         return data;
     }
 
