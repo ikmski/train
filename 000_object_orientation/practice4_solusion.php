@@ -18,9 +18,18 @@ class Singleton
     }
 
     private function __construct() {}
+    private function __clone() {}
 
 }
 
-$singleton = Singleton::getInstance();
-$singleton->doSomething();
+$singleton1 = Singleton::getInstance();
+$singleton1->doSomething();
+
+$singleton2 = Singleton::getInstance();
+
+var_dump($singleton1 === $singleton2);
+
+//$singleton3 = new Singleton();
+
+$singleton4 = clone $singleton1;
 
