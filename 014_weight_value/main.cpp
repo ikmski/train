@@ -2,11 +2,49 @@
 #include <sys/time.h>
 #include <time.h>
 #include <string>
+#include <algorithm>
 
-int calc(int** const data, const int num)
+const int MAX_W = 10;
+
+int dfs(int* ws, int* ps, int** dp, int num, int n, int w)
 {
+    if (w > MAX_W) return -1;
+    if (n >= num) return 0;
+    if (dp[n][w] >= 0) return dp[n][w];
 
-    return 1;
+    if (w < ws[n]) {
+        dp[n][w] = dfs(ws, ps, dp, num, n+1, w);
+    }
+    else {
+        dp[n][w] = std::max(dfs(ws, ps, dp, num, n+1, w), dfs(ws, ps, dp, num, n+1, w-ws[n]) + ps[n]);
+    }
+        printf("%d, %d, %d\n", n, w, dp[n][w]);
+    return dp[n][w];
+}
+
+int calc(int* const ws, int* const ps, const int num)
+{
+    int result = 0;
+
+    int** dp = new int*[num+1];
+    for (int i = 0; i < num+1; ++i) {
+        dp[i] = new int[MAX_W+1];
+    }
+
+    for (int i = 0; i < num+1; ++i) {
+        for (int j = 0; j < MAX_W+1; ++j) {
+            dp[i][j] = -1;
+        }
+    }
+
+    result = dfs(ws, ps, dp, num, 0, 10);
+
+    for (int i = 0; i < num+1; ++i) {
+        delete[] dp[i];
+    }
+    delete[] dp;
+
+    return result;
 }
 
 int main(int argc, char* argv[])
@@ -33,15 +71,13 @@ int main(int argc, char* argv[])
     printf("num = %d\n", num);
 
     // 領域確保
-    int** data = new int*[num];
-    for (int i = 0; i < num; ++i) {
-        data[i] = new int[2];
-    }
+    int* ws = new int[num];
+    int* ps = new int[num];
 
     // ファイル入力
     for (int i = 0; i < num; ++i) {
-        fscanf(infp, "%d,%d", &data[i][0], &data[i][1]);
-printf("%d %d\n", data[i][0], data[i][1]);
+        fscanf(infp, "%d,%d", &ws[i], &ps[i]);
+printf("%d %d\n", ws[i], ps[i]);
     }
     fclose(infp); // 入力ファイル
 
@@ -51,7 +87,7 @@ printf("%d %d\n", data[i][0], data[i][1]);
     // 時間計測開始
     gettimeofday(&startTime, NULL);
 
-    int result =  calc(data, num);
+    int result =  calc(ws, ps, num);
 printf("result = %d\n", result);
 
     // 時間計測終了
@@ -76,10 +112,8 @@ printf("result = %d\n", result);
     printf("Case #%s: %4d  %.3f[msec]\n", indexStr.c_str(), result, timeDiff*1000.0);
 
     // 解放
-    for (int i = 0; i < 2; ++i) {
-        delete[] data[i];
-    }
-    delete[] data;
+    delete[] ws;
+    delete[] ps;
 
 
     return 0;
