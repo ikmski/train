@@ -4,48 +4,68 @@
 #include <string>
 #include <algorithm>
 
-const int MAX_W = 10;
-
-int dfs(int* ws, int* ps, int** dp, int num, int n, int w)
+class Knapsack
 {
-    if (w > MAX_W) return -1;
-    if (n >= num) return 0;
-    if (dp[n][w] >= 0) return dp[n][w];
+private:
+    int maxWeight;
+    int num;
+    int* weight;
+    int* price;
+    int** dp;
 
-    if (w < ws[n]) {
-        dp[n][w] = dfs(ws, ps, dp, num, n+1, w);
-    }
-    else {
-        dp[n][w] = std::max(dfs(ws, ps, dp, num, n+1, w), dfs(ws, ps, dp, num, n+1, w-ws[n]) + ps[n]);
-    }
-        printf("%d, %d, %d\n", n, w, dp[n][w]);
-    return dp[n][w];
-}
+public:
 
-int calc(int* const ws, int* const ps, const int num)
-{
-    int result = 0;
+    Knapsack(int* const a_weight, int* const a_price, const int a_num, const int a_maxWeight)
+    {
+        maxWeight = a_maxWeight;
+        num = a_num;
+        weight = a_weight;
+        price = a_price;
 
-    int** dp = new int*[num+1];
-    for (int i = 0; i < num+1; ++i) {
-        dp[i] = new int[MAX_W+1];
-    }
-
-    for (int i = 0; i < num+1; ++i) {
-        for (int j = 0; j < MAX_W+1; ++j) {
-            dp[i][j] = -1;
+        dp = new int*[num+1];
+        for (int i = 0; i < num+1; ++i) {
+            dp[i] = new int[maxWeight+1];
         }
+
+        for (int i = 0; i < num+1; ++i) {
+            for (int j = 0; j < maxWeight+1; ++j) {
+                dp[i][j] = -1;
+            }
+        }
+
     }
 
-    result = dfs(ws, ps, dp, num, 0, 10);
-
-    for (int i = 0; i < num+1; ++i) {
-        delete[] dp[i];
+    ~Knapsack()
+    {
+        for (int i = 0; i < num+1; ++i) {
+            delete[] dp[i];
+        }
+        delete[] dp;
     }
-    delete[] dp;
 
-    return result;
-}
+    int calc()
+    {
+        return dfs(0, maxWeight);
+    }
+
+private:
+
+    int dfs(int n, int w)
+    {
+        if (w > maxWeight) return -1;
+        if (n >= num) return 0;
+        if (dp[n][w] >= 0) return dp[n][w];
+
+        if (w < weight[n]) {
+            dp[n][w] = dfs(n+1, w);
+        }
+        else {
+            dp[n][w] = std::max(dfs(n+1, w), dfs(n+1, w-weight[n]) + price[n]);
+        }
+        return dp[n][w];
+    }
+};
+
 
 int main(int argc, char* argv[])
 {
@@ -84,10 +104,12 @@ printf("%d %d\n", ws[i], ps[i]);
     timeval startTime;     // 開始時刻
     timeval endTime;       // 終了時刻
 
+    Knapsack*  knapsack = new Knapsack(ws, ps,num, 10);
+
     // 時間計測開始
     gettimeofday(&startTime, NULL);
 
-    int result =  calc(ws, ps, num);
+    int result =  knapsack->calc();
 printf("result = %d\n", result);
 
     // 時間計測終了
@@ -95,6 +117,8 @@ printf("result = %d\n", result);
     double timeDiff = static_cast<double>(endTime.tv_sec  - startTime.tv_sec);
     double usecDiff = static_cast<double>(endTime.tv_usec - startTime.tv_usec);
     timeDiff += (usecDiff/1000000.0);
+
+    delete knapsack;
 
     // 出力ファイル
     std::string inputPath(inputFileName);
