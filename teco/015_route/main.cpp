@@ -3,6 +3,81 @@
 #include <time.h>
 #include <string>
 
+class RouteSearch
+{
+private:
+    int X;
+    int Y;
+    int** data;
+    int** buf;
+
+public:
+
+    RouteSearch(int** a_data, int a_X, int a_Y)
+    {
+        data = a_data;
+        X = a_X;
+        Y = a_Y;
+
+        buf = new int*[X+1];
+        for (int i = 0; i <= X; ++i) {
+            buf[i] = new int[Y+1];
+        }
+
+        init();
+    }
+
+    ~RouteSearch()
+    {
+        for (int i = 0; i <= X; ++i) {
+            delete[] buf[i];
+        }
+        delete[] buf;
+    }
+
+    void init()
+    {
+        for (int i = 0; i <= X; ++i) {
+            for (int j = 0; j <= Y; ++j) {
+                buf[i][j] = 0;
+            }
+        }
+    }
+
+    int calcByDfs() { return dfs(0, 0); }
+    int calcByMemo() { return memo(0, 0); }
+    int calcByDp() { return dp(); }
+
+private:
+
+    int dfs(int x, int y)
+    {
+        if ((x > X) || (y > Y)) return 0;
+        if ((x == X) && (y == Y)) return 1;
+        return dfs(x + 1, y) + dfs(x, y + 1);
+    }
+
+    int memo(int x, int y)
+    {
+        if ((x > X) || (y > Y)) return 0;
+        if ((x == X) && (y == Y)) return 1;
+        if (buf[x][y] > 0) return buf[x][y];
+        return buf[x][y] = dfs(x + 1, y) + dfs(x, y + 1);
+    }
+
+    int dp()
+    {
+        buf[0][0] = 1;
+        for (int i = 0; i <= X; ++i) {
+            for (int j = 0; j <= Y; ++j) {
+                if (0 != i) buf[i][j] += buf[i - 1][j];
+                if (0 != j) buf[i][j] += buf[i][j - 1];
+            }
+        }
+        return buf[X][Y];
+    }
+
+};
 
 int main(int argc, char* argv[])
 {
@@ -63,13 +138,15 @@ int main(int argc, char* argv[])
         printf("\n");
     }
 
+    RouteSearch* routeSearch = new RouteSearch(data, maxX, maxY);
+
     timeval startTime;     // 開始時刻
     timeval endTime;       // 終了時刻
 
     // 時間計測開始
     gettimeofday(&startTime, NULL);
 
-    int result =  0;
+    int result =  routeSearch->calcByDp();
 printf("result = %d\n", result);
 
     // 時間計測終了
@@ -77,6 +154,8 @@ printf("result = %d\n", result);
     double timeDiff = static_cast<double>(endTime.tv_sec  - startTime.tv_sec);
     double usecDiff = static_cast<double>(endTime.tv_usec - startTime.tv_usec);
     timeDiff += (usecDiff/1000000.0);
+
+    delete routeSearch;
 
     // 出力ファイル
     std::string inputPath(inputFileName);
