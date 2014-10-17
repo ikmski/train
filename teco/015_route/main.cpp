@@ -146,7 +146,7 @@ int main(int argc, char* argv[])
     // 時間計測開始
     gettimeofday(&startTime, NULL);
 
-    int result =  routeSearch->calcByDp();
+    int result =  routeSearch->calcByDfs();
 printf("result = %d\n", result);
 
     // 時間計測終了
