@@ -44,9 +44,7 @@ public:
         }
     }
 
-    int calcByDfs() { return dfs(0, 0); }
-    int calcByMemo() { return memo(0, 0); }
-    int calcByDp() { return dp(); }
+    int calc() { return dfs(0, 0); }
 
 private:
 
@@ -55,26 +53,6 @@ private:
         if ((x > X) || (y > Y)) return 0;
         if ((x == X) && (y == Y)) return 1;
         return dfs(x + 1, y) + dfs(x, y + 1);
-    }
-
-    int memo(int x, int y)
-    {
-        if ((x > X) || (y > Y)) return 0;
-        if ((x == X) && (y == Y)) return 1;
-        if (buf[x][y] > 0) return buf[x][y];
-        return buf[x][y] = dfs(x + 1, y) + dfs(x, y + 1);
-    }
-
-    int dp()
-    {
-        buf[0][0] = 1;
-        for (int i = 0; i <= X; ++i) {
-            for (int j = 0; j <= Y; ++j) {
-                if (0 != i) buf[i][j] += buf[i - 1][j];
-                if (0 != j) buf[i][j] += buf[i][j - 1];
-            }
-        }
-        return buf[X][Y];
     }
 
 };
@@ -146,8 +124,8 @@ int main(int argc, char* argv[])
     // 時間計測開始
     gettimeofday(&startTime, NULL);
 
-    int result =  routeSearch->calcByDfs();
-printf("result = %d\n", result);
+    int result =  routeSearch->calc();
+//printf("result = %d\n", result);
 
     // 時間計測終了
     gettimeofday(&endTime, NULL);
