@@ -51,6 +51,7 @@ private:
     int dfs(int x, int y)
     {
         if ((x > X) || (y > Y)) return 0;
+        if (data[x][y] == 0) return 0;
         if ((x == X) && (y == Y)) return 1;
         return dfs(x + 1, y) + dfs(x, y + 1);
     }

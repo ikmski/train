@@ -55,6 +55,7 @@ private:
             for (int j = 0; j <= Y; ++j) {
                 if (0 != i) buf[i][j] += buf[i - 1][j];
                 if (0 != j) buf[i][j] += buf[i][j - 1];
+                if (data[i][j] == 0) buf[i][j] = 0;
             }
         }
         return buf[X][Y];

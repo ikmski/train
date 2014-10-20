@@ -51,6 +51,7 @@ private:
     int memo(int x, int y)
     {
         if ((x > X) || (y > Y)) return 0;
+        if (data[x][y] == 0) return 0;
         if ((x == X) && (y == Y)) return 1;
         if (buf[x][y] > 0) return buf[x][y];
         return buf[x][y] = memo(x + 1, y) + memo(x, y + 1);
