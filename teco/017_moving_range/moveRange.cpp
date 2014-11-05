@@ -8,14 +8,17 @@ MoveRange::MoveRange(int a_X, int a_Y)
     field = new int*[X];
     vehicle = new int*[X];
     movableRange = new int*[X];
+    move = new int*[X];
     for (int i = 0; i < X; ++i) {
         field[i] = new int[Y];
         vehicle[i] = new int[Y];
         movableRange[i] = new int[Y];
+        move[i] = new int[Y];
         for (int j = 0; j < Y; ++j) {
             field[i][j] = 0;
             vehicle[i][j] = 0;
             movableRange[i][j] = 0;
+            move[i][j] = -1;
         }
     }
 }
@@ -26,10 +29,12 @@ MoveRange::~MoveRange()
         delete[] field[i];
         delete[] vehicle[i];
         delete[] movableRange[i];
+        delete[] move[i];
     }
     delete[] field;
     delete[] vehicle;
     delete[] movableRange;
+    delete[] move;
 }
 
 bool MoveRange::setFieldFromFile(std::string filePath)
@@ -80,6 +85,43 @@ bool MoveRange::setVehicleFromFile(std::string filePath)
 
 void MoveRange::calcMovableRange(int x, int y, int num)
 {
+    move[x][y] = num;
+
+    for (int n = 0; n < num; ++n) {
+
+        for (int j = 0; j < Y; ++j) {
+            for (int i = 0; i < X; ++i) {
+
+                if (move[i][j] > 0) {
+
+                    // up
+                    if (canMove(i, j-1)) {
+                        move[i][j-1] = std::max(move[i][j] - cost(i, j-1), move[i][j-1]);
+                        movableRange[i][j-1] = 1;
+                    }
+                    // left
+                    if (canMove(i-1, j)) {
+                        move[i-1][j] = std::max(move[i][j] - cost(i-1, j), move[i-1][j]);
+                        movableRange[i-1][j] = 1;
+                    }
+                    // down
+                    if (canMove(i, j+1)) {
+                        move[i][j+1] = std::max(move[i][j] - cost(i, j+1), move[i][j+1]);
+                        movableRange[i][j+1] = 1;
+                    }
+                    // right
+                    if (canMove(i+1, j)) {
+                        move[i+1][j] = std::max(move[i][j] - cost(i+1, j), move[i+1][j]);
+                        movableRange[i+1][j] = 1;
+                    }
+
+                }
+
+            }
+        }
+
+    }
+
 
 }
 
@@ -92,5 +134,39 @@ void MoveRange::displayMovableRange()
         }
             printf("\n");
     }
+    printf("\n");
+
+    printf("move = \n");
+    for (int j = 0; j < Y; ++j) {
+        for (int i = 0; i < X; ++i) {
+            printf("%d ", move[i][j]);
+        }
+            printf("\n");
+    }
 }
+
+int MoveRange::cost(int x, int y)
+{
+    int result = 0;
+    if (1 == field[x][y]) {
+        result = 1;
+    }
+    else if (3 == field[x][y]) {
+        result = 2;
+    }
+    return result;
+}
+
+bool MoveRange::canMove(int x, int y)
+{
+    bool result = true;
+
+    if (x < 0 || x >= X || y < 0 || y >= Y ||
+        2 == field[x][y] ) {
+        result = false;
+    }
+
+    return result;
+}
+
 

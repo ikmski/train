@@ -12,6 +12,7 @@ private:
     int** field;
     int** vehicle;
     int** movableRange;
+    int** move;
 
 public:
 
@@ -28,6 +29,9 @@ public:
     void displayMovableRange();
 
 private:
+
+    int cost(int x, int y);
+    bool canMove(int x, int y);
 
     MoveRange(const MoveRange&);
     MoveRange& operator = (const MoveRange&);
