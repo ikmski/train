@@ -32,6 +32,7 @@ private:
 
     int cost(int x, int y);
     bool canMove(int x, int y);
+    bool canStop(int x, int y);
 
     MoveRange(const MoveRange&);
     MoveRange& operator = (const MoveRange&);
