@@ -59,7 +59,7 @@ bool MoveRange::setFieldFromFile(std::string filePath)
     for (int j = 0; j < Y; ++j) {
         for (int i = 0; i < X; ++i) {
             if (fscanf(fp, "%d,", &field[i][j]) != '\0');
-            printf("%d ", field[i][j]);
+            printf(" %d", field[i][j]);
         }
         printf("\n");
     }
@@ -82,7 +82,7 @@ bool MoveRange::setVehicleFromFile(std::string filePath)
     for (int j = 0; j < Y; ++j) {
         for (int i = 0; i < X; ++i) {
             if (fscanf(fp, "%d,", &vehicle[i][j]) != '\0');
-            printf("%d ", vehicle[i][j]);
+            printf(" %d", vehicle[i][j]);
         }
         printf("\n");
     }
@@ -95,6 +95,8 @@ bool MoveRange::setVehicleFromFile(std::string filePath)
 
 void MoveRange::calcMovableRange(int x, int y, int num)
 {
+    init();
+
     move[x][y] = num;
 
     for (int n = 0; n < num; ++n) {
@@ -140,18 +142,30 @@ void MoveRange::displayMovableRange()
     printf("movable range = \n");
     for (int j = 0; j < Y; ++j) {
         for (int i = 0; i < X; ++i) {
-            printf("%d ", movableRange[i][j]);
+            printf(" %d", movableRange[i][j]);
         }
             printf("\n");
     }
     printf("\n");
 
+    /*
     printf("move = \n");
     for (int j = 0; j < Y; ++j) {
         for (int i = 0; i < X; ++i) {
-            printf("%d ", move[i][j]);
+            printf(" %d", move[i][j]);
         }
             printf("\n");
+    }
+    */
+}
+
+void MoveRange::init()
+{
+    for (int i = 0; i < X; ++i) {
+        for (int j = 0; j < Y; ++j) {
+            movableRange[i][j] = 0;
+            move[i][j] = -1;
+        }
     }
 }
 

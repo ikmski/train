@@ -27,13 +27,29 @@ int main(int argc, char* argv[])
     int x;
     int y;
     int move;
-    printf("Input your vehicle position! ([x],[y],[move])\n");
-    scanf("%d,%d,%d",&x, &y, &move);
-    printf("x = [%d], y = [%d], move = [%d]\n\n", x, y, move);
+    char s[8];
 
-    moveRange->calcMovableRange(x, y, move);
+    while (1) {
 
-    moveRange->displayMovableRange();
+        printf("Input your vehicle position! ([x],[y],[move])\n");
+        scanf("%d,%d,%d",&x, &y, &move);
+        printf("x = [%d], y = [%d], move = [%d]\n\n", x, y, move);
+
+        moveRange->calcMovableRange(x, y, move);
+
+        moveRange->displayMovableRange();
+
+        printf("\n");
+        printf("Continue ? [y] or [n]\n");
+        scanf("%s",s);
+        if ('y' == s[0] || 'Y' == s[0]) {
+            // continue;
+        }
+        else {
+            break;
+        }
+
+    }
 
     delete moveRange;
 
